@@ -15,7 +15,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "sh 'mvn clean verify sonar:sonar"
+                    sh "mvn sonar:sonar -Dsonar.host.url=http://3.94.126.19:9000 -Dsonar.login=sqa_1cbc22df229a08dc22f548ec96c17802ff21ea2b"
                 }
             }
         }
