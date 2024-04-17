@@ -6,7 +6,11 @@
     <artifactId>bookstore</artifactId>
     <version>0.0.1-V</version>
     <packaging>war</packaging>
-
+    <scm>
+        <connection>scm:git:git://github.com/SaharYusufzai/bokstore.git</connection>
+        <developerConnection>scm:git:ssh://github.com/SaharYusufzai/bokstore.git</developerConnection>
+        <url>https://github.com/SaharYusufzai/bokstore.git</url>
+    </scm>
     <build>
         <sourceDirectory>src</sourceDirectory>
         <plugins>

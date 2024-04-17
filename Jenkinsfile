@@ -12,10 +12,19 @@ pipeline {
         }
         stage('Building the app using maven') {
             steps {
-                sh '''
-                echo Building the Maven application
-                mvn clean install
-                '''
+                script {
+                    if (params.DEPLOY_ENV == 'dev') {
+                        sh 'mvn clean install -Pdev'
+                    } else if (params.DEPLOY_ENV == 'qat') {
+                        sh 'mvn clean install -Pqat'
+                    } else if (params.DEPLOY_ENV == 'stage') {
+                        sh 'mvn clean install -Pstage'
+                    } else if (params.DEPLOY_ENV == 'prod') {
+                        sh 'mvn clean install -Pprod'
+                    } else {
+                        echo 'No valid environment selected for deployment'
+                    }
+                }
             }
         }
         stage('SonarQube Analysis') {
@@ -39,31 +48,6 @@ pipeline {
             }
             steps {
                 sh './deploy-to-dev.sh'
-            }
-        }
-        stage('Deploy to QAT Env') {
-            when {
-                expression { params.DEPLOY_ENV == 'qat' }
-            }
-            steps {
-                echo 'Deploying to QAT Environment'
-                unstash 'app'
-            }
-        }
-        stage('Deploy to Stage Env') {
-            when {
-                expression { params.DEPLOY_ENV == 'stage' }
-            }
-            steps {
-                sh './deploy-to-stage.sh'
-            }
-        }
-        stage('Deploy to Prod Env') {
-            when {
-                expression { params.DEPLOY_ENV == 'prod' }
-            }
-            steps {
-                sh './deploy-to-prod.sh'
             }
         }
     }
