@@ -36,12 +36,6 @@ pipeline {
                 '''
             }
         }
-        stage('Deliver') {
-            steps {
-                sh 'mvn -B release:prepare release:perform'
-                stash includes: '**/target/*.war', name: 'app'
-            }
-        }
         stage('Deploy to Dev Env') {
             when {
                 expression { params.DEPLOY_ENV == 'dev' }
