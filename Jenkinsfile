@@ -1,6 +1,15 @@
 pipeline {
     agent any
+    parameters {
+        choice(name: 'DEPLOY_ENV', choices: ['dev', 'qat', 'stage', 'prod'], description: 'Choose the environment to deploy')
+    }
     stages {
+        stage('Deliver') {
+            steps {
+                sh 'mvn -B release:prepare release:perform'
+                stash includes: '**/target/*.war', name: 'app'
+            }
+        }
         stage('Building the app using maven') {
             steps {
                 sh '''
@@ -22,6 +31,39 @@ pipeline {
                 echo Running code coverage
                 mvn jacoco:report
                 '''
+            }
+        }
+        stage('Deploy to Dev Env') {
+            when {
+                expression { params.DEPLOY_ENV == 'dev' }
+            }
+            steps {
+                sh './deploy-to-dev.sh'
+            }
+        }
+        stage('Deploy to QAT Env') {
+            when {
+                expression { params.DEPLOY_ENV == 'qat' }
+            }
+            steps {
+                echo 'Deploying to QAT Environment'
+                unstash 'app'
+            }
+        }
+        stage('Deploy to Stage Env') {
+            when {
+                expression { params.DEPLOY_ENV == 'stage' }
+            }
+            steps {
+                sh './deploy-to-stage.sh'
+            }
+        }
+        stage('Deploy to Prod Env') {
+            when {
+                expression { params.DEPLOY_ENV == 'prod' }
+            }
+            steps {
+                sh './deploy-to-prod.sh'
             }
         }
     }
