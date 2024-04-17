@@ -12,7 +12,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('My SonarQube Server') {
-                    sh 'mvn clean verify sonar:sonar -Dsonar.login=myAuthenticationToken'
+                    sh 'mvn clean verify sonar:sonar -Dsonar.login=sqa_1cbc22df229a08dc22f548ec96c17802ff21ea2b'
                 }
             }
         }
