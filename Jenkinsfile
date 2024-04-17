@@ -4,12 +4,6 @@ pipeline {
         choice(name: 'DEPLOY_ENV', choices: ['dev', 'qat', 'stage', 'prod'], description: 'Choose the environment to deploy')
     }
     stages {
-        stage('Deliver') {
-            steps {
-                sh 'mvn -B release:prepare release:perform'
-                stash includes: '**/target/*.war', name: 'app'
-            }
-        }
         stage('Building the app using maven') {
             steps {
                 script {
@@ -40,6 +34,12 @@ pipeline {
                 echo Running code coverage
                 mvn jacoco:report
                 '''
+            }
+        }
+        stage('Deliver') {
+            steps {
+                sh 'mvn -B release:prepare release:perform'
+                stash includes: '**/target/*.war', name: 'app'
             }
         }
         stage('Deploy to Dev Env') {
