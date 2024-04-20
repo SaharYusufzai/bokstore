@@ -29,6 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'pwd'
+                sh 'chmod +x ./${params.DEPLOY_ENV}.sh'
                 sh "./${params.DEPLOY_ENV}.sh"
             }
         }
