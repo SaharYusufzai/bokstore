@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'pwd'
-                sh "./deploy-to-${params.DEPLOY_ENV}.sh"
+                sh "./${params.DEPLOY_ENV}.sh"
             }
         }
     }
